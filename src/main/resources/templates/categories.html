@@ -1,0 +1,42 @@
+<main>
+    <div class="row justify-content-center">
+        <div class="col-md-4 mt-3" style="color: red" th:if="${categories.size() == 0}">
+            <span>No available categories</span>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4 mx-0">
+        <div class="col-md-9" th:if="${categories.size() > 0}">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Category name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Key words</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="category : ${categories}" class="category">
+                        <td th:text="${category.categoryID}"></td>
+                        <td th:text="${category.name}"></td>
+                        <td th:text="${category.description}"></td>
+                        <td><span th:each="keyWord : ${category.keyWords}"><span th:text="${keyWord.toString()}" class="pe-1"></span></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center m-0">
+        <div class="col-md-4">
+            <div class="d-grid gap-2">
+                <a type="button" class="btn btn-primary mt-3" href="/categories/add-category">Add new category</a>
+            </div>
+        </div>
+    </div>
+</main>
+

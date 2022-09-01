@@ -1,0 +1,115 @@
+    <main>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-6">
+            <h6>Enter product info:</h6>
+        </div>
+    </div>
+
+    <form action="/products/add-or-edit-product" method="post">
+
+        <div class="row justify-content-center mt-3" th:if="${product} != null">
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="floatingID" name="productID" placeholder="ProductID"
+                           th:value="(${product.getProductID})" hidden>
+                    <label for="floatingID">Product ID</label>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name"
+                           th:value="(${product} != null ? ${product.getName()} : '')" >
+                    <label for="floatingName">Name</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+            <div class="col-sm-2">
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="floatingPrice" name="price" placeholder="Price"
+                           th:value="(${product} != null ? ${product.getPrice()} : '')">
+                    <label for="floatingPrice">Price</label>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="floatingQuantity" name="quantity" placeholder="Quantity"
+                           th:value="(${product} != null ? ${product.getQuantity()} : '')">
+                    <label for="floatingQuantity">Quantity</label>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-floating mb-3">
+                    <input type="date" class="form-control" id="floatingExpDate"
+                           name="expDate" placeholder="ExpirationDate"
+                           th:value="(${product} != null ? ${product.getExpirationDate()} : '')">
+                    <label for="floatingExpDate">Expiration Date</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6">
+                <select class="form-select form-select-md" aria-label=".form-select-sm example" name="manufacturer">
+                    <option th:if="${product} != null"
+                            th:selected="${product.getManufacturer().getManufacturerID() == manufacturer.getManufacturerID()}"
+                            th:each="manufacturer : ${manufacturers}"
+                            th:text="${manufacturer.manufacturerName}"
+                            th:value="${manufacturer.manufacturerID}">
+                    </option>
+                    <option th:each="manufacturer : ${manufacturers}"
+                            th:text="${manufacturer.manufacturerName}"
+                            th:value="${manufacturer.manufacturerID}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6">
+                <select class="form-select form-select-md" aria-label=".form-select-sm example" name="category">
+                    <option th:if="${product} != null"
+                            th:each="category : ${categories}"
+                            th:text="${category.name}"
+                            th:value="${category.categoryID}">
+                    </option>
+                    <option th:if="${product} == null"
+                            th:each="category : ${categories}"
+                            th:text="${category.name}"
+                            th:value="${category.categoryID}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingProductImageURL" name="productImageURL" placeholder="Name"
+                           th:value="(${product} != null ? ${product.getProductImageURL()} : '')">
+                    <label for="floatingProductImageURL">Image URL</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center m-0" th:if="${product} == null">
+            <div class="col-md-6">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary mt-3">Add product</button>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center m-0" th:if="${product} != null">
+            <div class="col-md-6">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary mt-3">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>

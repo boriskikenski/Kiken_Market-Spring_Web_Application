@@ -1,0 +1,111 @@
+<main>
+    <div class="row justify-content-center mt-4 mx-0">
+        <div class="col-md-6 justify-content-start">
+            <h5>You ordered:</h5>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-1 mx-0">
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <!--<th scope="col"></th>-->
+                        <th scope="col" >Product</th>
+                        <th scope="col" style="width:10%">Quantity</th>
+                        <th scope="col" style="width:15%">Price</th>
+                        <th scope="col" style="width:15%">Total for product</th>
+                        <th scope="col" style="width:15%">Total</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.getProduct().name}"></td>
+                        <td th:text="${product.quantity}"></td>
+                        <td th:text="${product.boughtOnPrice}"></td>
+                        <td th:text="${product.totalForProduct}"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                        <td th:text="${total}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4 mx-0">
+        <div class="col-md-6 justify-content-start">
+            <h5>Enter order info:</h5>
+        </div>
+    </div>
+
+    <form action="/order/confirm" method="post">
+        <div class="row justify-content-center mt-3 mx-0">
+            <div class="col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingEmail" name="email" placeholder="Email" required>
+                    <label for="floatingEmail">Enter your email:</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-1 mx-0">
+            <div class="col-md-6">
+                <p>Delivery location:</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mx-0">
+            <div class="col-sm-2">
+                <div class="form-floating mb-3 ">
+                    <input type="text" class="form-control" id="floatingStreet" name="street"
+                           placeholder="Street" required>
+                    <label for="floatingStreet">Street</label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-floating mb-3 ">
+                    <input type="number" class="form-control" id="floatingStreetNumber"
+                           name="streetNumber" placeholder="Street number" required>
+                    <label for="floatingStreetNumber">Street number</label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingCity" name="city" placeholder="City" required>
+                    <label for="floatingCity">City</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mx-0">
+            <div class="col-sm-3">
+                <div class="form-floating mb-3 ">
+                    <input type="number" class="form-control" id="floatingEntryNumber" name="entryNumber"
+                           placeholder="entryNumber">
+                    <label for="floatingEntryNumber">Building entry number <sup><small>(*optional)</small></sup></label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-floating mb-3 ">
+                    <input type="number" class="form-control" id="floatingApartmentNumber"
+                           name="apartmentNumber" placeholder="Street number">
+                    <label for="floatingStreetNumber">Apartment number <sup><small>(*optional)</small></sup></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-5 m-0">
+            <div class="col-md-4">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success mt-3">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>

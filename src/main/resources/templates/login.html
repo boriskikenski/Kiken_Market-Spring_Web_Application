@@ -1,0 +1,70 @@
+<main>
+    <div class="containter mt-2 ">
+        <div class="row justify-content-center mx-0">
+            <div class="col-sm-12 text-center">
+                <h3>Log in with:</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-0">
+        <div class="row justify-content-center mx-0">
+
+            <div class="col-sm-1">
+                <a th:href="@{/oauth2/authorization/google}">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"
+                         class="img-fluid p-4" alt="Google">
+                </a>
+            </div>
+
+            <div class="col-sm-1">
+                <a th:href="@{/oauth2/authorization/facebook}">
+                    <img src="https://www.facebook.com/images/fb_icon_325x325.png"
+                         class="img-fluid p-4" alt="Facebook">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="containter mt-2">
+        <div class="row justify-content-center mx-0">
+            <div class="col-sm-12 text-center">
+                <h5>OR</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-2">
+        <form action="/login" method="post">
+
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password">
+                </div>
+            </div>
+
+            <div class="row justify-content-center m-0">
+                <div class="col-md-5">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary mt-3">Login</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row justify-content-center m-0">
+            <div class="col-md-5">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-secondary mt-3" href="/register">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+

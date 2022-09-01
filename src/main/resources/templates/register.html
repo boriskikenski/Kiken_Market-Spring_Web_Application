@@ -1,0 +1,101 @@
+<main>
+    <div class="container mt-2">
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-6">
+                <h3>Enter your information:</h3>
+            </div>
+        </div>
+        <form action="/register" method="post">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name">
+                        <label for="floatingName">Name</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingSurname" name="surname" placeholder="Surname">
+                        <label for="floatingSurname">Surname</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username">
+                        <label for="floatingInput">Username</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="floatingRepeatPassword" name="repeatPassword" placeholder="Repeat password">
+                        <label for="floatingRepeatPassword">Repeat password</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <div class="form-floating mb-3 ">
+                        <input type="number" class="form-control" id="floatingStreetNumber" name="streetNumber" placeholder="Street number">
+                        <label for="floatingStreetNumber">Street number</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-floating mb-3 ">
+                        <input type="text" class="form-control" id="floatingStreet" name="street" placeholder="Street">
+                        <label for="floatingStreet">Street</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingCity" name="city" placeholder="City">
+                        <label for="floatingCity">City</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" value="ROLE_COSTUMER" name="role" id="ROLE_COSTUMER">
+                        <label class="form-check-label" for="ROLE_COSTUMER">
+                            Costumer
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" value="ROLE_ADMIN" name="role" id="ROLE_ADMIN" >
+                        <label class="form-check-label" for="ROLE_ADMIN">
+                            ROLE_ADMIN
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center m-0">
+                <div class="col-md-6">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary mt-3">Register</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>

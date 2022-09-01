@@ -1,0 +1,65 @@
+<main>
+    <div class="row justify-content-center mt-4 mx-0">
+        <div class="col-md-9">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <!--<th scope="col"></th>-->
+                        <th scope="col" style="width:30%">Product</th>
+                        <th scope="col" style="width:10%">Quantity</th>
+                        <th scope="col" style="width:15%">Price</th>
+                        <th scope="col" style="width:15%">Total for product</th>
+                        <th scope="col" style="width:15%">Total</th>
+                        <th scope="col" style="width:10%">Change quantity</th>
+                        <th scope="col" style="width:5%"></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.getProduct().name}"></td>
+                        <td th:text="${product.quantity}"></td>
+                        <td th:text="${product.boughtOnPrice}"></td>
+                        <td th:text="${product.totalForProduct}"></td>
+                        <td></td>
+                        <td>
+                            <form th:action="@{'/shopping-cart/added/{id}' (id=${product.getProduct().productID})}" method="post">
+                                <div class="d-flex">
+                                    <input type="number" name="quantity" placeholder="" style="width: 50%; height: 50%" required>
+                                    <button type="submit"
+                                            class="btn ps-0 py-0">
+                                        <i class="fa-solid fa-pen-to-square me-3 fa-xl"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form th:action="@{'/shopping-cart/delete/{id}' (id=${product.getProduct().productID})}" method="post">
+                                <button type="submit"
+                                        class="btn ps-0 py-0">
+                                    <i class="fa-solid fa-trash fa-lg"></i>
+                                </button>
+
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td/><td/><td/><td/>
+                        <td th:text="${total}"></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center m-0">
+        <div class="col-md-4">
+            <div class="d-grid gap-2">
+                <a type="button" class="btn btn-success mt-3" href="/order">Order now</a>
+            </div>
+        </div>
+    </div>
+</main>

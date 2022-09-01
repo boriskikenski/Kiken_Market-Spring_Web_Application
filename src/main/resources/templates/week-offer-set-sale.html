@@ -1,0 +1,45 @@
+<main>
+    <form action="/week-offer/selectProducts/set-sale" method="post">
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-9">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Product name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Manufacturer</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Set sale</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="product : ${products}" class="category">
+                            <td th:text="${product.productID}"></td>
+                            <td th:text="${product.name}"></td>
+                            <td th:text="${product.price}"></td>
+                            <td th:text="${product.quantity}"></td>
+                            <td th:text="${product.getManufacturer().getManufacturerName()}"></td>
+                            <td th:text="${product.getCategories().getName()}"></td>
+                            <td>
+                                <input type="number" class="form-control w-25" name="sale" placeholder="Sale">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center m-0">
+            <div class="col-md-6">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary mt-3">Post</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
