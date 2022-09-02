@@ -6,10 +6,7 @@ import mk.com.kikenmarket.demo.service.AnnouncementService;
 import mk.com.kikenmarket.demo.service.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,11 +42,30 @@ public class AnnouncementController {
         return "template";
     }
 
-    @PostMapping("/add-announcement")
+    @GetMapping("/edit-announcement/{id}")
+    private String getEditAnnouncementPage(Model model,
+                                           @PathVariable Long id){
+        List<Category> categories = this.categoryService.listAllCategories();
+        Announcement announcement = this.announcementService.findByID(id);
+
+        model.addAttribute("announcement", announcement);
+        model.addAttribute("categories", categories);
+        model.addAttribute("bodyContent", "add-announcement");
+        return "template";
+    }
+
+    @PostMapping("/add-or-edit-announcement")
     private String saveAnnouncement(@RequestParam String title,
-                                    @RequestParam String information){
+                                    @RequestParam String information,
+                                    @RequestParam(required = false) Long announcementID){
         LocalDate today = LocalDate.now();
-        this.announcementService.saveAnnouncement(title, information, today);
+        this.announcementService.saveAnnouncement(title, information, today, announcementID);
+        return "redirect:/announcements";
+    }
+
+    @PostMapping("/delete/{id}")
+    private String deleteAnnouncement(@PathVariable Long id){
+        this.announcementService.deleteAnnouncement(id);
         return "redirect:/announcements";
     }
 }

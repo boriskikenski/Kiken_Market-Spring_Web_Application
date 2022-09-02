@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface AnnouncementService {
     List<Announcement> listAllAnnouncements();
-
-    void saveAnnouncement(String title, String information, LocalDate createdOnDate);
-
+    void saveAnnouncement(String title, String information, LocalDate createdOnDate, Long id);
     Announcement findLast();
+    Announcement findByID(Long id);
+    void deleteAnnouncement(Long id);
 }

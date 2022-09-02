@@ -4,11 +4,18 @@
             <h3>Enter manufacturer information:</h3>
         </div>
     </div>
-    <form action="/manufacturers/add-manufacturer" method="post">
+    <form action="/manufacturers/add-or-edit-manufacturer" method="post">
+        <div class="row justify-content-center mt-3" th:if="${manufacturer} != null">
+            <div class="col-md-6">
+                <input type="number" th:value="${manufacturer.manufacturerID}" name="manufacturerID" hidden>
+            </div>
+        </div>
+
         <div class="row justify-content-center mt-3">
             <div class="col-md-6">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name">
+                    <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name"
+                           th:value="(${manufacturer} != null ? ${manufacturer.getManufacturerName()} : '')">
                     <label for="floatingName">Name</label>
                 </div>
             </div>
@@ -17,6 +24,12 @@
         <div class="row justify-content-center mt-3">
             <div class="col-md-6">
                 <select class="form-select form-select-md" aria-label=".form-select-sm example" name="country">
+                    <option th:if="${manufacturer} != null"
+                            th:selected="${manufacturer.getCountryFrom() == country.getName().getCommon()}"
+                            th:each="country : ${countries}"
+                            th:text="${country.getName().getCommon()}"
+                            th:value="${country.getName().getCommon()}">
+                    </option>
                     <option th:each="country : ${countries}"
                             th:text="${country.getName().getCommon()}"
                             th:value="${country.getName().getCommon()}">
@@ -25,10 +38,17 @@
             </div>
         </div>
 
-        <div class="row justify-content-center m-0">
+        <div class="row justify-content-center m-0" th:if="${manufacturer} == null">
             <div class="col-md-6">
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary mt-3">Add manufacturer</button>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center m-0" th:if="${manufacturer} != null">
+            <div class="col-md-6">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary mt-3">Save</button>
                 </div>
             </div>
         </div>

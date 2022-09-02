@@ -1,4 +1,4 @@
-<main>
+<main xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="row justify-content-center">
         <div class="col-md-4 mt-3" style="color: red" th:if="${manufacturers.size() == 0}">
             <span>No available manufacturers</span>
@@ -14,6 +14,7 @@
                         <th scope="col"></th>
                         <th scope="col">Manufacturer name</th>
                         <th scope="col">Country from</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
 
@@ -22,6 +23,18 @@
                         <td th:text="${manufacturer.getManufacturerID()}"></td>
                         <td th:text="${manufacturer.manufacturerName}"></td>
                         <td th:text="${manufacturer.countryFrom}"></td>
+                        <td>
+                            <div class="d-flex justify-content-center mt-0 mb-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a th:href="@{'/manufacturers/edit-page/{id}' (id=${manufacturer.getManufacturerID()})}" type="button">
+                                    <i class="fa-solid fa-pen-to-square me-3 fa-lg" style="color: black"></i>
+                                </a>
+                                <form th:action="@{'/manufacturers/delete/{id}' (id=${manufacturer.getManufacturerID()})}" method="post">
+                                    <button type="submit" style="border: 0; background-color: transparent">
+                                        <i class="fa-solid fa-trash fa-lg" style="color: black"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

@@ -5,10 +5,7 @@ import mk.com.kikenmarket.demo.service.CategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,17 +36,36 @@ public class CategoryController {
         return "template";
     }
 
-    @PostMapping("/add-category")
+    @GetMapping("/edit-page/{id}")
+    private String getCategoryEditPage(Model model,
+                                       @PathVariable Long id){
+        List<Category> categories = this.categoryService.listAllCategories();
+        Category category = this.categoryService.findByID(id);
+
+        model.addAttribute("category", category);
+        model.addAttribute("categories", categories);
+        model.addAttribute("bodyContent", "add-category");
+        return "template";
+    }
+
+    @PostMapping("/add-or-edit-category")
     private String addCategory(@RequestParam String name,
                                @RequestParam String description,
                                @RequestParam String keyWord1,
                                @RequestParam String keyWord2,
-                               @RequestParam String keyWord3){
+                               @RequestParam String keyWord3,
+                               @RequestParam(required = false) Long categoryID){
         List<String> keyWords = new ArrayList<>();
         keyWords.add(keyWord1);
         keyWords.add(keyWord2);
         keyWords.add(keyWord3);
-        categoryService.addCategory(name,description,keyWords);
+        categoryService.saveCategory(name,description,keyWords, categoryID);
+        return "redirect:/categories";
+    }
+
+    @PostMapping("/delete/{id}")
+    private String deleteCategory(@PathVariable Long id){
+        this.categoryService.deleteCategory(id);
         return "redirect:/categories";
     }
 }

@@ -22,8 +22,15 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public void saveAnnouncement(String title, String information, LocalDate createdOnDate) {
-        this.announcementRepository.save(new Announcement(title, information, createdOnDate));
+    public void saveAnnouncement(String title, String information, LocalDate createdOnDate, Long id) {
+        if (id == null){
+            this.announcementRepository.save(new Announcement(title, information, createdOnDate));
+        } else {
+            Announcement announcement = this.announcementRepository.findByAnnouncementID(id);
+            announcement.setTitle(title);
+            announcement.setInformation(information);
+            this.announcementRepository.save(announcement);
+        }
     }
 
     @Override
@@ -33,5 +40,15 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 .mapToLong(announcement -> announcement.getAnnouncementID())
                 .max().getAsLong();
         return this.announcementRepository.findByAnnouncementID(annonuncementID);
+    }
+
+    @Override
+    public Announcement findByID(Long id) {
+        return this.announcementRepository.findByAnnouncementID(id);
+    }
+
+    @Override
+    public void deleteAnnouncement(Long id) {
+        this.announcementRepository.deleteById(id);
     }
 }

@@ -21,12 +21,24 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     }
 
     @Override
-    public void saveManufacturer(String name, String countryFrom) {
-        manufacturerRepository.save(new Manufacturer(name, countryFrom));
+    public void saveManufacturer(String name, String countryFrom, Long id) {
+        if (id == null){
+            manufacturerRepository.save(new Manufacturer(name, countryFrom));
+        } else {
+            Manufacturer manufacturer = this.manufacturerRepository.findByManufacturerID(id);
+            manufacturer.setManufacturerName(name);
+            manufacturer.setCountryFrom(countryFrom);
+            this.manufacturerRepository.save(manufacturer);
+        }
     }
 
     @Override
     public Manufacturer findByID(Long id) {
         return manufacturerRepository.findByManufacturerID(id);
+    }
+
+    @Override
+    public void deleteManufacturer(Long id) {
+        this.manufacturerRepository.deleteById(id);
     }
 }

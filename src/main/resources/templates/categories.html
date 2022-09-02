@@ -1,4 +1,4 @@
-<main>
+<main xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="row justify-content-center">
         <div class="col-md-4 mt-3" style="color: red" th:if="${categories.size() == 0}">
             <span>No available categories</span>
@@ -15,6 +15,7 @@
                         <th scope="col">Category name</th>
                         <th scope="col">Description</th>
                         <th scope="col">Key words</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
 
@@ -24,6 +25,18 @@
                         <td th:text="${category.name}"></td>
                         <td th:text="${category.description}"></td>
                         <td><span th:each="keyWord : ${category.keyWords}"><span th:text="${keyWord.toString()}" class="pe-1"></span></span></td>
+                        <td>
+                            <div class="d-flex justify-content-center mt-0 mb-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a th:href="@{'/categories/edit-page/{id}' (id=${category.categoryID})}" type="button">
+                                    <i class="fa-solid fa-pen-to-square me-3 fa-lg" style="color: black"></i>
+                                </a>
+                                <form th:action="@{'/categories/delete/{id}' (id=${category.categoryID})}" method="post">
+                                    <button type="submit" style="border: 0; background-color: transparent">
+                                        <i class="fa-solid fa-trash fa-lg" style="color: black"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

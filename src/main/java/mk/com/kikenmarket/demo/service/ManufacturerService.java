@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ManufacturerService {
     List<Manufacturer> listAllManufacturers();
-    void saveManufacturer(String name, String countryFrom);
+    void saveManufacturer(String name, String countryFrom, Long id);
     Manufacturer findByID(Long id);
+    void deleteManufacturer(Long id);
 }

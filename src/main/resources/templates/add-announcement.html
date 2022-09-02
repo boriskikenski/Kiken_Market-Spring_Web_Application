@@ -4,11 +4,17 @@
             <h3>Create announcement:</h3>
         </div>
     </div>
-    <form action="/announcements/add-announcement" method="post">
+    <form action="/announcements/add-or-edit-announcement" method="post">
+        <div class="row justify-content-center mt-3" th:if="${announcement} != null">
+            <div class="col-md-6">
+                <input type="number" th:value="${announcement.announcementID}" name="announcementID" hidden>
+            </div>
+        </div>
         <div class="row justify-content-center mt-3">
             <div class="col-md-6">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingTitle"name="title" placeholder="Title">
+                    <input type="text" class="form-control" id="floatingTitle"name="title" placeholder="Title"
+                           th:value="(${announcement} != null ? ${announcement.title} : '')">
                     <label for="floatingTitle">Title</label>
                 </div>
             </div>
@@ -18,16 +24,24 @@
             <div class="col-md-6">
                 <div class="form-floating">
                     <textarea class="form-control" name="information" placeholder="Information"
-                              id="floatingInformation" style="height: 15vh"></textarea>
+                              id="floatingInformation" style="height: 15vh"
+                              th:value="(${announcement} != null ? ${announcement.getInformation()} : '')"></textarea>
                     <label for="floatingInformation">Information</label>
                 </div>
             </div>
         </div>
 
-        <div class="row justify-content-center m-0">
+        <div class="row justify-content-center m-0" th:if="${announcement} == null">
             <div class="col-md-6">
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary mt-3">Post</button>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center m-0" th:if="${announcement} != null">
+            <div class="col-md-6">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary mt-3">Save changes</button>
                 </div>
             </div>
         </div>

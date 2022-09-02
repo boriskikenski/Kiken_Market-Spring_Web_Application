@@ -17,8 +17,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<Category> addCategory(String name, String description, List<String> keyWords) {
-        return Optional.of(categoryRepository.save(new Category(name, description, keyWords)));
+    public void saveCategory(String name, String description, List<String> keyWords, Long categoryID) {
+        if (categoryID == null){
+            categoryRepository.save(new Category(name, description, keyWords));
+        } else {
+            Category category = this.categoryRepository.findByCategoryID(categoryID);
+            category.setName(name);
+            category.setDescription(description);
+            category.setKeyWords(keyWords);
+            this.categoryRepository.save(category);
+        }
     }
 
     @Override
@@ -29,5 +37,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findByID(Long id) {
         return categoryRepository.findByCategoryID(id);
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        this.categoryRepository.deleteById(id);
     }
 }
