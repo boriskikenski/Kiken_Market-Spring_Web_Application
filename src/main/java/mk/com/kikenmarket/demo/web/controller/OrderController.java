@@ -1,9 +1,6 @@
 package mk.com.kikenmarket.demo.web.controller;
 
-import mk.com.kikenmarket.demo.model.Category;
-import mk.com.kikenmarket.demo.model.ProductShoppingCart;
-import mk.com.kikenmarket.demo.model.ShoppingCart;
-import mk.com.kikenmarket.demo.model.User;
+import mk.com.kikenmarket.demo.model.*;
 import mk.com.kikenmarket.demo.service.CategoryService;
 import mk.com.kikenmarket.demo.service.OrderService;
 import mk.com.kikenmarket.demo.service.ShoppingCartService;
@@ -13,10 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -71,5 +65,21 @@ public class OrderController {
         this.orderService.createOrder(costumer, today, email, street, streetNumber,
                 city, entryNumber, apartmentNumber, mailMessage);
         return "redirect:/successful-order";
+    }
+
+    @PostMapping("/reorder/{id}")
+    private String reorder(@PathVariable Long id,
+                           Authentication authentication){
+        User costumer = this.userService.getCurrentUser(authentication);
+        this.shoppingCartService.deleteAllProductsFromCart(costumer);
+        return "redirect:/order/reorderAll?orderID="+id;
+    }
+
+    @GetMapping ("/reorderAll")
+    private String reorderAddProducts(Authentication authentication,
+                                      Long orderID){
+        User costumer = this.userService.getCurrentUser(authentication);
+        this.orderService.reorder(orderID, costumer);
+        return "redirect:/shopping-cart";
     }
 }

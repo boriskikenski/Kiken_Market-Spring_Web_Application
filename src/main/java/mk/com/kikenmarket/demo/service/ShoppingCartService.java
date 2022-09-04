@@ -14,4 +14,5 @@ public interface ShoppingCartService {
     double getCurrenValue(User costumer, List<ProductShoppingCart> productShoppingCart);
     void deleteFromShoppingCart(Long productID, User costumer);
     void updateProductShoppingCart();
+    void deleteAllProductsFromCart(User costumer);
 }

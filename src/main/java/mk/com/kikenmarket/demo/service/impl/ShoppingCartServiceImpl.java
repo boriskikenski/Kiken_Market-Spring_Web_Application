@@ -9,9 +9,14 @@ import mk.com.kikenmarket.demo.repository.UserRepository;
 import mk.com.kikenmarket.demo.service.ShoppingCartService;
 import org.springframework.stereotype.Service;
 
+
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final UserRepository userRepository;
@@ -109,15 +114,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteFromShoppingCart(Long productID, User costumer) {
-        ShoppingCart shoppingCart = this.shoppingCartRepository.findShoppingCartByCostumerAndShoppingCartStatus
-                (costumer, ShoppingCartStatus.ACTIVE);
-        ProductShoppingCartID productShoppingCartID =
-                new ProductShoppingCartID(productID, shoppingCart.getShoppingCartID());
-        this.productShoppingCartRepository.deleteById(productShoppingCartID);
-    }
-
-    @Override
     public void updateProductShoppingCart() {
         List<ShoppingCart> shoppingCarts = this.shoppingCartRepository
                 .findAllByShoppingCartStatus(ShoppingCartStatus.ACTIVE);
@@ -140,5 +136,29 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 this.productShoppingCartRepository.save(productShoppingCart);
             });
         });
+    }
+
+    @Override
+    public void deleteAllProductsFromCart(User costumer) {
+        ShoppingCart shoppingCart = this.shoppingCartRepository
+                .findShoppingCartByCostumerAndShoppingCartStatus(costumer, ShoppingCartStatus.ACTIVE);
+
+        List<Long> productInActiveShoppingCart = shoppingCart.getProductShoppingCartList()
+                .stream()
+                .map(productShoppingCart -> productShoppingCart.getProduct().getProductID())
+                .collect(Collectors.toList());
+        productInActiveShoppingCart.forEach
+                (product -> deleteFromShoppingCart(product, costumer));
+
+    }
+
+    @Override
+    public void deleteFromShoppingCart(Long productID, User costumer) {
+        ShoppingCart shoppingCart = this.shoppingCartRepository.findShoppingCartByCostumerAndShoppingCartStatus
+                (costumer, ShoppingCartStatus.ACTIVE);
+        ProductShoppingCartID productShoppingCartID =
+                new ProductShoppingCartID(productID, shoppingCart.getShoppingCartID());
+        this.productShoppingCartRepository.deleteById(productShoppingCartID);
+        this.shoppingCartRepository.save(shoppingCart);
     }
 }
