@@ -19,7 +19,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void createOrder(User costumer, LocalDate dateOfOrder, String email,
                             String street, Long streetNumber, String city,
-                            Long entryNumber, Long apartmentNumber, String mailMessage) {
+                            Long entryNumber, Long apartmentNumber) {
         ShoppingCart shoppingCart = this.shoppingCartRepository.findShoppingCartByCostumerAndShoppingCartStatus
                 (costumer, ShoppingCartStatus.ACTIVE);
 
@@ -67,34 +69,19 @@ public class OrderServiceImpl implements OrderService {
             this.orderRepository.save(reorder);
         }
 
-        try {
-            String from = "kiken.market.order@gmail.com";
-
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
-
-            helper.setSubject("ORDER");
-            helper.setFrom(from);
-            helper.setTo(email);
-
-            helper.setText(mailMessage);
-
-            mailSender.send(message);
-        } catch (MessagingException exception){
-            exception.getMessage();
-        }
-
         shoppingCart.setShoppingCartStatus(ShoppingCartStatus.ORDERED);
         this.shoppingCartRepository.save(shoppingCart);
         this.shoppingCartRepository.save(new ShoppingCart(costumer, ShoppingCartStatus.ACTIVE));
     }
 
     @Override
-    public String generateMail(User currentCostumer) {
-        ShoppingCart shoppingCart =  this.shoppingCartService.findByCustomer(currentCostumer);
+    public String generateMail(Long orderID) {
+        Order order = this.orderRepository.findByOrderID(orderID);
+        ShoppingCart shoppingCart = order.getCart();
         List<ProductShoppingCart> products = this.shoppingCartService
                 .findAllByShoppingCart(shoppingCart);
-        double total = this.shoppingCartService.getCurrenValue(currentCostumer, products);
+        double total = order.getMoneyValue();
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format("Your order is successfully processed!\n\nYou ordered:\n"));
         stringBuilder.append(String.format("Product\tQuantity\tPrice\tTotal\n"));
@@ -148,6 +135,35 @@ public class OrderServiceImpl implements OrderService {
                 reorder = order.getOrderID();
         }
         return reorder;
+    }
+
+    @Override
+    public void sendOrderMail(Long orderID, String mailMessage) {
+        String email = this.orderRepository.findByOrderID(orderID).getEmail();
+        try {
+            String from = "kiken.market.order@gmail.com";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setSubject("ORDER");
+            helper.setFrom(from);
+            helper.setTo(email);
+
+            helper.setText(mailMessage);
+
+            mailSender.send(message);
+        } catch (MessagingException exception){
+            exception.getMessage();
+        }
+    }
+
+    @Override
+    public Long getCurrentOrderID(User costumer) {
+        return this.orderRepository.findAllByCostumer(costumer)
+                .stream()
+                .map(order -> order.getOrderID())
+                .max(Comparator.comparing(Function.identity())).get();
     }
 }
 

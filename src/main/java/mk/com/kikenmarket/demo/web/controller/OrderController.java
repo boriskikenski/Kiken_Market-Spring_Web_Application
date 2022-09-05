@@ -51,22 +51,6 @@ public class OrderController {
         return "template";
     }
 
-    @PostMapping("/confirm")
-    private String confirmOrder(Authentication authentication,
-                                @RequestParam String email,
-                                @RequestParam String street,
-                                @RequestParam Long streetNumber,
-                                @RequestParam String city,
-                                @RequestParam(required = false) Long entryNumber,
-                                @RequestParam(required = false) Long apartmentNumber){
-        User costumer = this.userService.getCurrentUser(authentication);
-        LocalDate today = LocalDate.now();
-        String mailMessage = this.orderService.generateMail(costumer);
-        this.orderService.createOrder(costumer, today, email, street, streetNumber,
-                city, entryNumber, apartmentNumber, mailMessage);
-        return "redirect:/successful-order";
-    }
-
     @PostMapping("/reorder/{id}")
     private String reorder(@PathVariable Long id,
                            Authentication authentication){

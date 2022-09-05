@@ -14,14 +14,17 @@ public interface OrderService {
                      Long streetNumber,
                      String city,
                      Long entryNumber,
-                     Long apartmentNumber,
-                     String mailMessage);
+                     Long apartmentNumber);
 
-    String generateMail(User currentCostumer);
+    String generateMail(Long orderID);
 
     List<Order> listAllOrdersForCostumer(User costumer);
 
     void reorder(Long id, User costumer);
 
     Long checkForReorder(User costumer);
+
+    void sendOrderMail(Long orderID, String mailMessage);
+
+    Long getCurrentOrderID(User costumer);
 }
