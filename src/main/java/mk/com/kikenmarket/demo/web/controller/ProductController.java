@@ -86,6 +86,20 @@ public class ProductController {
         return "template";
     }
 
+    @GetMapping("/search")
+    private String search(Model model,
+                          @RequestParam String search){
+        List<Manufacturer> manufacturers = this.manufacturerService.listAllManufacturers();
+        List<Category> categories = this.categoryService.listAllCategories();
+        List<Product> products = this.productService.search(search);
+
+        model.addAttribute("products", products);
+        model.addAttribute("manufacturers", manufacturers);
+        model.addAttribute("categories", categories);
+        model.addAttribute("bodyContent", "products");
+        return "template";
+    }
+
     @PostMapping("add-or-edit-product")
     private String addProduct(@RequestParam(required = false) Long productID,
                               @RequestParam String name,

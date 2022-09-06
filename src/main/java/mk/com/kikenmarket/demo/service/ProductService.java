@@ -23,4 +23,6 @@ public interface ProductService {
     void deleteProduct(Long id);
 
     List<Product> listAllProductsFiltered(Long manufacturerID, Long categoryID);
+
+    List<Product> search(String search);
 }

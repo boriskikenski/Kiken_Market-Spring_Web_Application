@@ -95,4 +95,32 @@ public class ProductServiceImpl implements ProductService {
 
         return products;
     }
+
+    @Override
+    public List<Product> search(String search) {
+        List<Product> allProducts = listAllProducts();
+        List<Product> foundProducts = new ArrayList<>();
+
+        for (int i = 0; i < allProducts.size(); i++){
+            Product product = allProducts.get(i);
+            List<String> keyWord = product.getCategories().getKeyWords();
+
+            if (product.getName().toLowerCase().equals(search.toLowerCase())){
+                foundProducts.add(product);
+            }
+            if (product.getCategories().getName().toLowerCase().equals(search.toLowerCase())){
+                foundProducts.add(product);
+            }
+            if (product.getManufacturer().getManufacturerName().toLowerCase().equals(search.toLowerCase())){
+                foundProducts.add(product);
+            }
+            for (int j = 0; j < keyWord.size(); j++){
+                if (keyWord.get(j).toLowerCase().equals(search.toLowerCase())){
+                    foundProducts.add(product);
+                }
+            }
+        }
+
+        return foundProducts;
+    }
 }
