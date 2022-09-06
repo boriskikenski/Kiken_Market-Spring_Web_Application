@@ -1,40 +1,43 @@
-<div class="container align-item-center mb-3 ">
-    <div class="row d-flex ms-4">
-        <div class="col-md-2 d-flex">
-            <span class="pt-3">Filter product by:</span>
-        </div>
+<form action="/products/all-products" method="get">
+    <div class="container align-item-center mb-3 ">
+        <div class="row d-flex ms-4">
+            <div class="col-md-2 d-flex">
+                <span class="pt-3">Filter product by:</span>
+            </div>
 
-        <div class="col-md-2">
-            <div class="form-floating ">
-                <select class="form-select form-select-sm form-control border-0"
-                        id="floatingManufacturer" aria-label=".form-select-sm example" name="manufacturer" >
-                    <option th:each="manufacturer : ${manufacturers}"
-                            th:text="${manufacturer.manufacturerName}"
-                            th:value="${manufacturer.manufacturerID}">
-                    </option>
-                </select>
-                <label for="floatingManufacturer">Manufacturer:</label>
+            <div class="col-md-2">
+                <div class="form-floating ">
+                    <select class="form-select form-select-sm form-control border-0"
+                            id="floatingManufacturer" aria-label=".form-select-sm example" name="manufacturerID" >
+                        <option value="-1">Select manufacturer</option>
+                        <option th:each="manufacturer : ${manufacturers}"
+                                th:text="${manufacturer.manufacturerName}"
+                                th:value="${manufacturer.manufacturerID}">
+                        </option>
+                    </select>
+                    <label for="floatingManufacturer">Manufacturer:</label>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-floating ">
+                    <select class="form-select form-select-sm form-control border-0"
+                            id="floatingCategory" aria-label=".form-select-sm example" name="categoryID" >
+                        <option value="-1">Select category</option>
+                        <option th:each="category : ${categories}"
+                                th:text="${category.name}"
+                                th:value="${category.categoryID}">
+                        </option>
+                    </select>
+                    <label for="floatingCategory">Category:</label>
+                </div>
+            </div>
+
+            <div class="col-md-2 d-flex">
+                <button type="submit" class="btn">
+                    <i class="fa-solid fa-filter fa-lg pt-4" style="color: forestgreen"></i>
+                </button>
             </div>
         </div>
-
-        <div class="col-md-2">
-            <div class="form-floating ">
-                <select class="form-select form-select-sm form-control border-0"
-                        id="floatingCategory" aria-label=".form-select-sm example" name="category" >
-                    <option th:each="category : ${categories}"
-                            th:text="${category.name}"
-                            th:value="${category.categoryID}">
-                    </option>
-                </select>
-                <label for="floatingCategory">Category:</label>
-            </div>
-        </div>
-
-        <div class="col-md-2 d-flex">
-            <a href="/products"> <!--smeni shtop prakjash vo kontrolerot do products.html-->
-                <i class="fa-solid fa-filter fa-lg pt-4" style="color: forestgreen"></i>
-            </a>
-        </div>
-
     </div>
-</div>
+</form>

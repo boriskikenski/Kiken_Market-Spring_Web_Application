@@ -21,4 +21,6 @@ public interface ProductService {
     Product findByID(Long id);
 
     void deleteProduct(Long id);
+
+    List<Product> listAllProductsFiltered(Long manufacturerID, Long categoryID);
 }

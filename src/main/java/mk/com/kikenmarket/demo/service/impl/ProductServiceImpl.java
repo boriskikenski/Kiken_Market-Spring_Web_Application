@@ -3,6 +3,8 @@ package mk.com.kikenmarket.demo.service.impl;
 import mk.com.kikenmarket.demo.model.Category;
 import mk.com.kikenmarket.demo.model.Manufacturer;
 import mk.com.kikenmarket.demo.model.Product;
+import mk.com.kikenmarket.demo.repository.CategoryRepository;
+import mk.com.kikenmarket.demo.repository.ManufacturerRepository;
 import mk.com.kikenmarket.demo.repository.ProductRepository;
 import mk.com.kikenmarket.demo.service.ProductService;
 import mk.com.kikenmarket.demo.service.ShoppingCartService;
@@ -17,10 +19,14 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ShoppingCartService shoppingCartService;
+    private final ManufacturerRepository manufacturerRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ShoppingCartService shoppingCartService) {
+    public ProductServiceImpl(ProductRepository productRepository, ShoppingCartService shoppingCartService, ManufacturerRepository manufacturerRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.shoppingCartService = shoppingCartService;
+        this.manufacturerRepository = manufacturerRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -67,5 +73,26 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         this.productRepository.deleteProductByProductID(id);
+    }
+
+    @Override
+    public List<Product> listAllProductsFiltered(Long manufacturerID, Long categoryID) {
+        List<Product> products = new ArrayList<>();
+
+        if (manufacturerID == null && categoryID == null){
+            products = listAllProducts();
+        } else if (manufacturerID == -1 && categoryID != null) {
+            products = this.productRepository.findAllByCategories
+                    (this.categoryRepository.findByCategoryID(categoryID));
+        } else if (manufacturerID != null && categoryID == -1) {
+            products = this.productRepository.findAllByManufacturer
+                    (this.manufacturerRepository.findByManufacturerID(manufacturerID));
+        } else if (manufacturerID != null && categoryID != null) {
+            products = this.productRepository.findAllByManufacturerAndCategories
+                    (this.manufacturerRepository.findByManufacturerID(manufacturerID),
+                            this.categoryRepository.findByCategoryID(categoryID));
+        }
+
+        return products;
     }
 }

@@ -33,8 +33,10 @@ public class ProductController {
     }
 
     @GetMapping("/all-products")
-    private String getProductsPage(Model model){
-        List<Product> products = this.productService.listAllProducts();
+    private String getProductsPage(Model model,
+                                   @RequestParam(required = false) Long manufacturerID,
+                                   @RequestParam(required = false) Long categoryID){
+        List<Product> products = this.productService.listAllProductsFiltered(manufacturerID, categoryID);
         List<Category> categories = this.categoryService.listAllCategories();
         List<Manufacturer> manufacturers = this.manufacturerService.listAllManufacturers();
 
@@ -67,6 +69,20 @@ public class ProductController {
         model.addAttribute("manufacturers", manufacturers);
         model.addAttribute("categories", categories);
         model.addAttribute("bodyContent", "add-product");
+        return "template";
+    }
+
+    @GetMapping("/by-category/{id}")
+    private String getProductByCategory(Model model,
+                                        @PathVariable Long id){
+        List<Product> products = this.productService.listAllProductsFiltered(Long.valueOf(-1) , id);
+        List<Category> categories = this.categoryService.listAllCategories();
+        List<Manufacturer> manufacturers = this.manufacturerService.listAllManufacturers();
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("products", products);
+        model.addAttribute("manufacturers", manufacturers);
+        model.addAttribute("bodyContent", "products");
         return "template";
     }
 
