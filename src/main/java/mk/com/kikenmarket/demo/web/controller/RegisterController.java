@@ -4,6 +4,7 @@ import mk.com.kikenmarket.demo.model.Category;
 import mk.com.kikenmarket.demo.model.Role;
 import mk.com.kikenmarket.demo.service.CategoryService;
 import mk.com.kikenmarket.demo.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,10 @@ public class RegisterController {
     }
 
     @GetMapping
-    public String getRegisterPage(Model model){
+    public String getRegisterPage(Model model, Authentication authentication){
+        if (authentication != null) {
+            return "redirect:/home";
+        }
         List<Category> categories = this.categoryService.listAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("bodyContent", "register");
