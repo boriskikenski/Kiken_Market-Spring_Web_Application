@@ -3,6 +3,7 @@ package mk.com.kikenmarket.demo.service.impl;
 import mk.com.kikenmarket.demo.model.Product;
 import mk.com.kikenmarket.demo.model.WeekOffer;
 import mk.com.kikenmarket.demo.model.enumerations.WeekOfferStatus;
+import mk.com.kikenmarket.demo.model.exceptions.ProductNotFoundException;
 import mk.com.kikenmarket.demo.repository.ProductRepository;
 import mk.com.kikenmarket.demo.repository.WeekOfferRepository;
 import mk.com.kikenmarket.demo.service.WeekOfferService;
@@ -47,7 +48,7 @@ public class WeekOfferServiceImpl implements WeekOfferService {
         WeekOffer weekOffer = this.weekOfferRepository.findByOfferStatus(WeekOfferStatus.CREATING);
         List<Product> products = weekOffer.getProductList();
         for (int i = 0; i < products.size(); i++) {
-            Product p = this.productRepository.findByProductID(products.get(i).getProductID());
+            Product p = this.productRepository.findByProductID(products.get(i).getProductID()).get();
             p.setSale(sale.get(i));
             this.productRepository.save(p);
         }

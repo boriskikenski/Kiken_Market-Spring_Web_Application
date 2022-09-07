@@ -2,6 +2,8 @@ package mk.com.kikenmarket.demo.service.impl;
 
 import mk.com.kikenmarket.demo.model.*;
 import mk.com.kikenmarket.demo.model.enumerations.ShoppingCartStatus;
+import mk.com.kikenmarket.demo.model.exceptions.OutOfStockException;
+import mk.com.kikenmarket.demo.model.exceptions.ProductNotFoundException;
 import mk.com.kikenmarket.demo.repository.ProductRepository;
 import mk.com.kikenmarket.demo.repository.ProductShoppingCartRepository;
 import mk.com.kikenmarket.demo.repository.ShoppingCartRepository;
@@ -32,6 +34,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public boolean addProductToShoppingCart(User costumer, Long productID, double quantity) {
+        if (quantity > this.productRepository.findByProductID(productID).get().getQuantity()){
+            throw new OutOfStockException();
+        }
+
         boolean alreadyInShoppingCart;
 
         if (this.shoppingCartRepository.findShoppingCartByCostumerAndShoppingCartStatus
@@ -49,10 +55,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             ProductShoppingCart productShoppingCart = new ProductShoppingCart(productShoppingCartID);
 
             productShoppingCart.setShoppingCart(shoppingCart);
-            productShoppingCart.setProduct(this.productRepository.findByProductID(productID));
+            productShoppingCart.setProduct(this.productRepository.findByProductID(productID)
+                    .orElseThrow(()->new ProductNotFoundException(productID)));
             productShoppingCart.setQuantity(quantity);
 
-            Product product = this.productRepository.findByProductID(productID);
+            Product product = this.productRepository.findByProductID(productID)
+                    .orElseThrow(()->new ProductNotFoundException(productID));
             if (product.getSale() > 0){
                 productShoppingCart.setBoughtOnSale(product.getSale());
                 productShoppingCart.setBoughtOnPrice
@@ -122,7 +130,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     .findAllByShoppingCart(shoppingCart);
             productShoppingCartList.forEach(productShoppingCart -> {
                 Long productID = productShoppingCart.getProduct().getProductID();
-                Product product = this.productRepository.findByProductID(productID);
+                Product product = this.productRepository.findByProductID(productID)
+                        .orElseThrow(()->new ProductNotFoundException(productID));
                 if (product.getSale() == 0) {
                     productShoppingCart.setBoughtOnSale(0.0);
                     productShoppingCart.setBoughtOnPrice(product.getPrice());

@@ -1,6 +1,7 @@
 package mk.com.kikenmarket.demo.service.impl;
 
 import mk.com.kikenmarket.demo.model.Manufacturer;
+import mk.com.kikenmarket.demo.model.exceptions.ManufacturerNotFoundException;
 import mk.com.kikenmarket.demo.repository.ManufacturerRepository;
 import mk.com.kikenmarket.demo.service.ManufacturerService;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ public class ManufacturerServiceImpl implements ManufacturerService {
         if (id == null){
             manufacturerRepository.save(new Manufacturer(name, countryFrom));
         } else {
-            Manufacturer manufacturer = this.manufacturerRepository.findByManufacturerID(id);
+            Manufacturer manufacturer = this.manufacturerRepository.findByManufacturerID(id)
+                    .orElseThrow(()->new ManufacturerNotFoundException(id));
             manufacturer.setManufacturerName(name);
             manufacturer.setCountryFrom(countryFrom);
             this.manufacturerRepository.save(manufacturer);
@@ -34,7 +36,8 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     @Override
     public Manufacturer findByID(Long id) {
-        return manufacturerRepository.findByManufacturerID(id);
+        return manufacturerRepository.findByManufacturerID(id)
+                .orElseThrow(()->new ManufacturerNotFoundException(id));
     }
 
     @Override

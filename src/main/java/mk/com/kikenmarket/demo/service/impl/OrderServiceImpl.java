@@ -5,6 +5,7 @@ import mk.com.kikenmarket.demo.model.ProductShoppingCart;
 import mk.com.kikenmarket.demo.model.ShoppingCart;
 import mk.com.kikenmarket.demo.model.User;
 import mk.com.kikenmarket.demo.model.enumerations.ShoppingCartStatus;
+import mk.com.kikenmarket.demo.model.exceptions.OrderNotFoundException;
 import mk.com.kikenmarket.demo.repository.OrderRepository;
 import mk.com.kikenmarket.demo.repository.ShoppingCartRepository;
 import mk.com.kikenmarket.demo.service.OrderService;
@@ -62,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
                 this.orderRepository.save(order);
             }
         } else {
-            Order reorder = this.orderRepository.findByOrderID(checkForReorder(costumer));
+            Order reorder = this.orderRepository.findByOrderID(checkForReorder(costumer)).get();
             reorder.setNumberOfReorders(reorder.getNumberOfReorders()+1);
             reorder.setMoneyValue(shoppingCart.getCurrentValue());
             reorder.setDateOfOrder(dateOfOrder);
@@ -76,7 +77,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String generateMail(Long orderID) {
-        Order order = this.orderRepository.findByOrderID(orderID);
+        Order order = this.orderRepository.findByOrderID(orderID)
+                .orElseThrow(()->new OrderNotFoundException(orderID));
         ShoppingCart shoppingCart = order.getCart();
         List<ProductShoppingCart> products = this.shoppingCartService
                 .findAllByShoppingCart(shoppingCart);
@@ -104,7 +106,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void reorder(Long id, User costumer) {
-        Order order = this.orderRepository.findByOrderID(id);
+        Order order = this.orderRepository.findByOrderID(id)
+                .orElseThrow(()->new OrderNotFoundException(id));;
 
         order.getCart().getProductShoppingCartList().stream()
                 .forEach(productShoppingCart -> {
@@ -139,7 +142,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void sendOrderMail(Long orderID, String mailMessage) {
-        String email = this.orderRepository.findByOrderID(orderID).getEmail();
+        String email = this.orderRepository.findByOrderID(orderID)
+                .orElseThrow(()->new OrderNotFoundException(orderID))
+                .getEmail();
         try {
             String from = "kiken.market.order@gmail.com";
 

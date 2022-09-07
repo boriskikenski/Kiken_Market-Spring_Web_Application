@@ -3,6 +3,9 @@ package mk.com.kikenmarket.demo.service.impl;
 import mk.com.kikenmarket.demo.model.Category;
 import mk.com.kikenmarket.demo.model.Manufacturer;
 import mk.com.kikenmarket.demo.model.Product;
+import mk.com.kikenmarket.demo.model.exceptions.CategoryNotFoundException;
+import mk.com.kikenmarket.demo.model.exceptions.ManufacturerNotFoundException;
+import mk.com.kikenmarket.demo.model.exceptions.ProductNotFoundException;
 import mk.com.kikenmarket.demo.repository.CategoryRepository;
 import mk.com.kikenmarket.demo.repository.ManufacturerRepository;
 import mk.com.kikenmarket.demo.repository.ProductRepository;
@@ -38,7 +41,8 @@ public class ProductServiceImpl implements ProductService {
                     expirationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                     productImageURL));
         } else  {
-            Product product = this.productRepository.findByProductID(productID);
+            Product product = this.productRepository.findByProductID(productID)
+                    .orElseThrow(() -> new ProductNotFoundException(productID));
             product.setName(name);
             product.setQuantity(quantity);
             product.setPrice(price);
@@ -59,14 +63,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findAllByID(List<Long> listOfProductIDs) {
         List<Product> selectedProducts = listOfProductIDs.stream()
-                .map(productID -> this.productRepository.findByProductID(productID))
+                .map(productID -> this.productRepository.findByProductID(productID).get())
                 .collect(Collectors.toList());
         return selectedProducts;
     }
 
     @Override
     public Product findByID(Long id) {
-        return this.productRepository.findByProductID(id);
+        return this.productRepository.findByProductID(id)
+                .orElseThrow(()-> new ProductNotFoundException(id));
     }
 
     @Override
@@ -83,14 +88,18 @@ public class ProductServiceImpl implements ProductService {
             products = listAllProducts();
         } else if (manufacturerID == -1 && categoryID != null) {
             products = this.productRepository.findAllByCategories
-                    (this.categoryRepository.findByCategoryID(categoryID));
+                    (this.categoryRepository.findByCategoryID(categoryID)
+                            .orElseThrow(()-> new CategoryNotFoundException(categoryID)));
         } else if (manufacturerID != null && categoryID == -1) {
             products = this.productRepository.findAllByManufacturer
-                    (this.manufacturerRepository.findByManufacturerID(manufacturerID));
+                    (this.manufacturerRepository.findByManufacturerID(manufacturerID)
+                            .orElseThrow(()->new ManufacturerNotFoundException(manufacturerID)));
         } else if (manufacturerID != null && categoryID != null) {
             products = this.productRepository.findAllByManufacturerAndCategories
-                    (this.manufacturerRepository.findByManufacturerID(manufacturerID),
-                            this.categoryRepository.findByCategoryID(categoryID));
+                    (this.manufacturerRepository.findByManufacturerID(manufacturerID)
+                                    .orElseThrow(()->new ManufacturerNotFoundException(manufacturerID)),
+                            this.categoryRepository.findByCategoryID(categoryID)
+                                    .orElseThrow(()-> new CategoryNotFoundException(categoryID)));
         }
 
         return products;

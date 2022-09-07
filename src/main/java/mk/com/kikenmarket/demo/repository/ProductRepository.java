@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Product findByProductID(Long id);
+    Optional<Product> findByProductID(Long id);
     void deleteProductByProductID(Long id);
     List<Product> findAllByManufacturer(Manufacturer manufacturer);
     List<Product> findAllByCategories(Category category);

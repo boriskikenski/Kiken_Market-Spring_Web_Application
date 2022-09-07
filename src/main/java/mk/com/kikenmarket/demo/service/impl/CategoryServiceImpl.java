@@ -1,6 +1,7 @@
 package mk.com.kikenmarket.demo.service.impl;
 
 import mk.com.kikenmarket.demo.model.Category;
+import mk.com.kikenmarket.demo.model.exceptions.CategoryNotFoundException;
 import mk.com.kikenmarket.demo.repository.CategoryRepository;
 import mk.com.kikenmarket.demo.service.CategoryService;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryID == null){
             categoryRepository.save(new Category(name, description, keyWords));
         } else {
-            Category category = this.categoryRepository.findByCategoryID(categoryID);
+            Category category = this.categoryRepository.findByCategoryID(categoryID)
+                    .orElseThrow(()-> new CategoryNotFoundException(categoryID));
             category.setName(name);
             category.setDescription(description);
             category.setKeyWords(keyWords);
@@ -36,7 +38,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findByID(Long id) {
-        return categoryRepository.findByCategoryID(id);
+        return categoryRepository.findByCategoryID(id)
+                .orElseThrow(()-> new CategoryNotFoundException(id));
     }
 
     @Override

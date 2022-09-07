@@ -1,6 +1,7 @@
 package mk.com.kikenmarket.demo.service.impl;
 
 import mk.com.kikenmarket.demo.model.Announcement;
+import mk.com.kikenmarket.demo.model.exceptions.AnnouncementNotFoundException;
 import mk.com.kikenmarket.demo.repository.AnnouncementRepository;
 import mk.com.kikenmarket.demo.service.AnnouncementService;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         if (id == null){
             this.announcementRepository.save(new Announcement(title, information, createdOnDate));
         } else {
-            Announcement announcement = this.announcementRepository.findByAnnouncementID(id);
+            Announcement announcement = this.announcementRepository.findByAnnouncementID(id)
+                    .orElseThrow(()-> new AnnouncementNotFoundException(id));;
             announcement.setTitle(title);
             announcement.setInformation(information);
             this.announcementRepository.save(announcement);
@@ -39,12 +41,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         Long annonuncementID = annonuncements.stream()
                 .mapToLong(announcement -> announcement.getAnnouncementID())
                 .max().getAsLong();
-        return this.announcementRepository.findByAnnouncementID(annonuncementID);
+        return this.announcementRepository.findByAnnouncementID(annonuncementID)
+                .orElseThrow(()-> new AnnouncementNotFoundException(annonuncementID));
     }
 
     @Override
     public Announcement findByID(Long id) {
-        return this.announcementRepository.findByAnnouncementID(id);
+        return this.announcementRepository.findByAnnouncementID(id)
+                .orElseThrow(()-> new AnnouncementNotFoundException(id));
     }
 
     @Override
