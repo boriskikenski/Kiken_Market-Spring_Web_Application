@@ -1,13 +1,13 @@
 package mk.com.kikenmarket.demo.service.impl;
 
-import mk.com.kikenmarket.demo.model.Order;
-import mk.com.kikenmarket.demo.model.ProductShoppingCart;
-import mk.com.kikenmarket.demo.model.ShoppingCart;
-import mk.com.kikenmarket.demo.model.User;
+import mk.com.kikenmarket.demo.model.*;
+import mk.com.kikenmarket.demo.model.enumerations.CouponStatus;
 import mk.com.kikenmarket.demo.model.enumerations.ShoppingCartStatus;
 import mk.com.kikenmarket.demo.model.exceptions.OrderNotFoundException;
+import mk.com.kikenmarket.demo.repository.CouponRepository;
 import mk.com.kikenmarket.demo.repository.OrderRepository;
 import mk.com.kikenmarket.demo.repository.ShoppingCartRepository;
+import mk.com.kikenmarket.demo.service.CouponService;
 import mk.com.kikenmarket.demo.service.OrderService;
 import mk.com.kikenmarket.demo.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,27 +33,37 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartService shoppingCartService;
+    private final CouponService couponService;
+    private final CouponRepository couponRepository;
 
 
     public OrderServiceImpl(JavaMailSender mailSender, OrderRepository orderRepository,
-                            ShoppingCartRepository shoppingCartRepository, ShoppingCartService shoppingCartService) {
+                            ShoppingCartRepository shoppingCartRepository,
+                            ShoppingCartService shoppingCartService, CouponService couponService,
+                            CouponRepository couponRepository) {
         this.mailSender = mailSender;
         this.orderRepository = orderRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.shoppingCartService = shoppingCartService;
+        this.couponService = couponService;
+        this.couponRepository = couponRepository;
     }
 
     @Override
-    public void createOrder(User costumer, LocalDate dateOfOrder, String email,
+    public Long createOrder(User costumer, LocalDate dateOfOrder, String email,
                             String street, Long streetNumber, String city,
-                            Long entryNumber, Long apartmentNumber) {
+                            Long entryNumber, Long apartmentNumber, Coupon coupon) {
+        Long orderID = null;
+
         ShoppingCart shoppingCart = this.shoppingCartRepository.findShoppingCartByCostumerAndShoppingCartStatus
                 (costumer, ShoppingCartStatus.ACTIVE);
 
         if (checkForReorder(costumer) == null){
+            double orderValue = shoppingCart.getCurrentValue() - (shoppingCart.getCurrentValue() * (coupon.getSalePercentage()/100));
             this.orderRepository.save(new Order(costumer, dateOfOrder, email, street, streetNumber,
-                    city, shoppingCart, shoppingCart.getCurrentValue()));
+                    city, shoppingCart, orderValue));
             Order order = this.orderRepository.findByCart(shoppingCart);
+            orderID = order.getOrderID();
             if (entryNumber != null){
                 order.setToBuildingEntryNumber(entryNumber);
                 this.orderRepository.save(order);
@@ -64,8 +74,10 @@ public class OrderServiceImpl implements OrderService {
             }
         } else {
             Order reorder = this.orderRepository.findByOrderID(checkForReorder(costumer)).get();
+            double orderValue = shoppingCart.getCurrentValue() - (shoppingCart.getCurrentValue() * (coupon.getSalePercentage()/100));
+            orderID = reorder.getOrderID();
             reorder.setNumberOfReorders(reorder.getNumberOfReorders()+1);
-            reorder.setMoneyValue(shoppingCart.getCurrentValue());
+            reorder.setMoneyValue(orderValue);
             reorder.setDateOfOrder(dateOfOrder);
             this.orderRepository.save(reorder);
         }
@@ -73,6 +85,11 @@ public class OrderServiceImpl implements OrderService {
         shoppingCart.setShoppingCartStatus(ShoppingCartStatus.ORDERED);
         this.shoppingCartRepository.save(shoppingCart);
         this.shoppingCartRepository.save(new ShoppingCart(costumer, ShoppingCartStatus.ACTIVE));
+
+        coupon.setStatus(CouponStatus.USED);
+        this.couponRepository.save(coupon);
+
+        return orderID;
     }
 
     @Override
@@ -83,18 +100,29 @@ public class OrderServiceImpl implements OrderService {
         List<ProductShoppingCart> products = this.shoppingCartService
                 .findAllByShoppingCart(shoppingCart);
         double total = order.getMoneyValue();
+        Coupon coupon = this.couponService.findLastForCostumer(order.getCostumer());
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format("Your order is successfully processed!\n\nYou ordered:\n"));
-        stringBuilder.append(String.format("Product\tQuantity\tPrice\tTotal\n"));
+        stringBuilder.append(String.format("Product\t\tQuantity\t\tPrice\t\tTotal\n"));
         products.forEach(productShoppingCart -> {
-            stringBuilder.append(String.format("%-15s\t%d\t%.2f\t%.2f\n",
+            stringBuilder.append(String.format("%-15s\t\t%d\t\t%.2f\t\t%.2f\n",
                     productShoppingCart.getProduct().getName(),
                     (int)productShoppingCart.getQuantity(),
                     productShoppingCart.getBoughtOnPrice(),
                     productShoppingCart.getTotalForProduct()));
         });
         stringBuilder.append(String.format("\nTotal bill: %.2f\n\n", total));
+        if (coupon.getSalePercentage() == 0){
+            this.couponRepository.delete(coupon);
+        } else {
+            stringBuilder.append(String.format
+                    ("You earned coupon!\n" +
+                            "Congratulations!\n" +
+                            "Coupon is for sale of: %.1f\n"+
+                            "Coupon id: %d\n\n",
+                            coupon.getSalePercentage(), coupon.getCouponID()));
+        }
         stringBuilder.append(String.format("Thank you for choosing us!"));
         return stringBuilder.toString();
     }
@@ -161,14 +189,6 @@ public class OrderServiceImpl implements OrderService {
         } catch (MessagingException exception){
             exception.getMessage();
         }
-    }
-
-    @Override
-    public Long getCurrentOrderID(User costumer) {
-        return this.orderRepository.findAllByCostumer(costumer)
-                .stream()
-                .map(order -> order.getOrderID())
-                .max(Comparator.comparing(Function.identity())).get();
     }
 }
 

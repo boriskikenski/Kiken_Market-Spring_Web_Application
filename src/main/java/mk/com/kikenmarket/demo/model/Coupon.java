@@ -25,8 +25,15 @@ public class Coupon {
     @Enumerated(EnumType.STRING)
     private CouponType couponType;
 
-    @ManyToMany
-    private List<User> costumer;
+    @ManyToOne
+    private User costumer;
 
     public Coupon(){}
+
+    public Coupon(User costumer, double salePercentage, CouponStatus status, CouponType couponType) {
+        this.costumer = costumer;
+        this.salePercentage = salePercentage;
+        this.status = status;
+        this.couponType = couponType;
+    }
 }

@@ -2,6 +2,7 @@ package mk.com.kikenmarket.demo.web.controller;
 
 import com.stripe.exception.StripeException;
 import mk.com.kikenmarket.demo.model.ChargeRequest;
+import mk.com.kikenmarket.demo.service.CouponService;
 import mk.com.kikenmarket.demo.service.OrderService;
 import mk.com.kikenmarket.demo.service.impl.StripeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,11 @@ public class ChargeController {
     @Autowired
     private StripeService paymentsService;
     private final OrderService orderService;
+    private final CouponService couponService;
 
-    public ChargeController(OrderService orderService) {
+    public ChargeController(OrderService orderService, CouponService couponService) {
         this.orderService = orderService;
+        this.couponService = couponService;
     }
 
     @PostMapping("/charge")
@@ -26,6 +29,7 @@ public class ChargeController {
                          Model model,
                          @RequestParam Long orderID)
             throws StripeException {
+        this.couponService.generateCoupon(orderID);
         String mailMessage = this.orderService.generateMail(orderID);
         this.orderService.sendOrderMail(orderID, mailMessage);
 
