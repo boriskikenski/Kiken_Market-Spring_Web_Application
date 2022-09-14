@@ -2,7 +2,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/home">KIKEN MARKET</a>
+            <a class="navbar-brand logo-text mx-5 fw-bold" href="/home" style="color: #006e00">KIKEN MARKET</a>
 
             <button class="navbar-toggler"
                     type="button"
@@ -16,17 +16,17 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <li class="nav-item ms-5 me-2">
+                        <a class="nav-link " aria-current="page" href="/" style="color: darkgreen; font-size: 1.1vw;">Home</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="" id="navbarDropdown"
+                    <li class="nav-item dropdown me-2">
+                        <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" style="color: darkgreen; font-size: 1.1vw;"
                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Products
                         </a>
                         <ul class="dropdown-menu bg-light" aria-labelledby="navbarDropdown">
                             <li th:each="category : ${categories}" class="category">
-                                <a class="dropdown-item" th:href="@{'/products/by-category/{id}' (id=${category.categoryID})}">
+                                <a class="dropdown-item " th:href="@{'/products/by-category/{id}' (id=${category.categoryID})}">
                                     <th:block th:text="${category.name}"></th:block>
                                 </a>
                             </li>
@@ -34,17 +34,17 @@
                             <li><a class="dropdown-item" href="/products/all-products">All products</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/week-offer">Offer of the week</a>
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="/week-offer" style="color: darkgreen; font-size: 1.1vw;">Offer of the week</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/announcements">Announcements</a>
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="/announcements" style="color: darkgreen; font-size: 1.1vw;">Announcements</a>
                     </li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="nav-link" href="/categories">Categories</a>
+                    <li class="nav-item me-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link" href="/categories" style="color: darkgreen; font-size: 1.1vw;">Categories</a>
                     </li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="nav-link" href="/manufacturers">Manufacturers</a>
+                    <li class="nav-item me-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a class="nav-link" href="/manufacturers" style="color: darkgreen; font-size: 1.1vw;">Manufacturers</a>
                     </li>
                 </ul>
                 <form class="d-flex" action="/products/search" method="get">

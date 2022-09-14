@@ -5,45 +5,45 @@
         </div>
     </div>
 </div>
-<div class="d-flex flex-wrap justify-content-start mx-5" xmlns:sec="http://www.w3.org/1999/xhtml">
-    <div class="w-25 px-2 pb-4" th:each="product : ${products}">
+<div class="d-flex flex-wrap justify-content-center mx-0 mb-4" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="w-25 px-0 pb-0 me-3 mb-3" th:each="product : ${products}">
         <div class="card h-100">
-            <img class="card-img-top"  alt="Image not found"
+            <img class="card-img-top h-50"  alt="Image not found"
                  th:src="${product.getProductImageURL()}">
             <div class="card-body" th:if="${product.sale == 0 || product.sale == null}">
-                <h5 class="card-title text-center" ><th:block th:text="${product.name}"/></h5>
-                <p class="card-text mb-0">MANUFACTURER: <th:block th:text="${product.getManufacturer().manufacturerName}"/></p>
-                <p class="card-text">PRICE: <th:block th:text="${product.price} + ' ' + '€'"/></p>
+                <h5 class="card-title text-center product-title" ><th:block th:text="${product.name}"/></h5>
+                <p class="card-text mb-0 product-info mt-3">Manufacturer: <th:block th:text="${product.getManufacturer().manufacturerName}"/></p>
+                <p class="card-text product-info">Price: <th:block th:text="${product.price} + ' ' + '€'"/></p>
             </div>
             <div class="card-body" th:if="${product.sale > 0}">
-                <h5 class="card-title text-center" ><th:block th:text="${product.name}"/></h5>
-                <p class="card-text mb-0">MANUFACTURER: <th:block th:text="${product.getManufacturer().manufacturerName}"/></p>
-                <span class="card-text">Regular price: <span class="text-decoration-line-through"><th:block th:text="${product.price} + ' ' + '€' "/></span><br/></span>
-                <span class="card-text fs-4 fw-bold" style="color: red">ON SALE: <th:block th:text="${product.sale}"/> % <br/></span>
-                <span class="card-text fs-4 fw-bold" style="color: red">NEW PRICE: <th:block th:text="${product.price - (product.price * (product.sale / 100))} + ' ' + '€'"/></span>
+                <h5 class="card-title text-center product-title" ><th:block th:text="${product.name}"/></h5>
+                <p class="card-text mb-0 product-info mt-3">Manufacturer: <th:block th:text="${product.getManufacturer().manufacturerName}"/></p>
+                <span class="card-text product-info">Regular price: <span class="text-decoration-line-through"><th:block th:text="${product.price} + ' ' + '€' "/></span><br/></span>
+                <span class="card-text fs-5 fw-bold" style="color: #e50404">SALE: <th:block th:text="${product.sale}"/> % <br/></span>
+                <span class="card-text fs-5 fw-bold" style="color: #e50404">NEW PRICE: <th:block th:text="${product.price - (product.price * (product.sale / 100))} + ' ' + '€'"/></span>
             </div>
 
             <form th:action="@{'/shopping-cart/added/{id}' (id=${product.productID})}" method="post">
-                <div class="d-flex mb-0">
-                    <div class="form-floating mb-1 ">
+                <div class="d-flex mb-3 ms-3">
+                    <div class="form-floating mb-0 ">
                         <input type="number" class="form-control"
                                id="floatingQuantity" name="quantity" placeholder="Quantity" style="border-color: darkgreen" min="1" required>
                         <label for="floatingQuantity">Quantity</label>
                     </div>
                     <button type="submit"
-                            class="btn btn-success mb-1">
+                            class="btn btn-success mb-0">
                         Add to your cart
                     </button>
                 </div>
             </form>
 
-            <div class="d-flex justify-content-center mt-0 mb-1" sec:authorize="hasRole('ROLE_ADMIN')">
+            <div class="d-flex justify-content-center mt-3 mb-2" sec:authorize="hasRole('ROLE_ADMIN')">
                 <a th:href="@{'/products/edit-page/{id}' (id=${product.productID})}" type="button">
-                    <i class="fa-solid fa-pen-to-square me-3 fa-lg" style="color: black"></i>
+                    <i class="fa-solid fa-pen-to-square me-3 fa-lg text-danger fs-3"></i>
                 </a>
                 <form th:action="@{'/products/delete/{id}' (id=${product.productID})}" method="post">
                     <button type="submit" style="border: 0; background-color: white">
-                        <i class="fa-solid fa-trash fa-lg" style="color: black"></i>
+                        <i class="fa-solid fa-trash fa-lg text-danger fs-3"></i>
                     </button>
                 </form>
             </div>

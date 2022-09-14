@@ -1,0 +1,46 @@
+.title-text {
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.logo-text {
+    font-family: 'DM Sans', sans-serif;
+}
+
+.market-title {
+    color: #004800;
+    font-family: 'Secular One', sans-serif;
+    font-size: 4vw;
+}
+
+.market-subtitle {
+    color: #006e00;
+    font-family: 'Secular One', sans-serif;
+    font-size: 2vw;
+}
+
+.offer-text {
+    color: #002350;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2.5vw;
+}
+.offer-text-small {
+    color: #002350;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.75vw;
+}
+
+.product-title {
+    color: #004800;
+    font-family: 'Hind Madurai', sans-serif;
+    font-size: 1.5vw;
+}
+
+.product-info {
+    color: darkslategrey;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.25vw;
+}
+
+.menu-item-text {
+    color: darkgreen;
+}

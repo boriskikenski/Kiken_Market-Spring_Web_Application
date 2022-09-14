@@ -2,33 +2,35 @@
     <div class="container mt-2">
         <div class="row d-flex justify-content-center mb-5">
             <div class="row-md-5 text-center">
-                <p><h1 class="mb-0">KIKEN MARKET</h1>
-                <h6>since 1996</h6></p>
+                <p><h1 class="mb-0 market-title">KIKEN MARKET</h1>
+                <h6 class="market-subtitle">since 1996</h6></p>
+                <div class="d-flex justify-content-center">
+                    <hr class="text-center w-25">
+                </div>
             </div>
         </div>
     </div>
-    <div class="container mt-2">
-        <div class="row d-flex justify-content-center mt-5">
-            <div class="row-md-5 text-center">
-                <p></p><h5 class="mb-0">OFFER OF THE WEEK</h5><h6>buy smart</h6></p>
+    <div class="container mt-0">
+        <div class="row d-flex justify-content-center mt-0">
+            <div class="row-md-5 text-center"><h5 class="mb-0 offer-text">OFFER OF THE WEEK</h5><h6 class="offer-text-small">buy smart</h6></p>
             </div>
         </div>
     </div>
     <div th:replace="products-template"/>
 
-    <div class="container mt-2">
+    <div class="container mt-0">
         <div class="row d-flex justify-content-center mt-5">
             <div class="row-md-5 text-center">
-                <h5 class="mb-0">Announcements</h5>
+                <h5 class="mb-0 offer-text">Announcements</h5>
             </div>
         </div>
     </div>
 
     <div class="container mt-3">
         <div class="row justify-content-center">
-            <div class="col-sm-8">
+            <div class="col-sm-6">
                 <div class="card my-3">
-                    <div class="card-header">
+                    <div class="card-header product-title">
                         Announcement
                     </div>
                     <div class="card-body mb-0">
@@ -40,10 +42,10 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-center m-0">
+    <div class="row justify-content-center m-0 mb-5">
         <div class="col-md-2 ">
             <div class="d-grid gap-2">
-                <a type="button" class="btn btn-primary mt-1" href="/announcements">See more</a>
+                <a type="button" class="btn btn-secondary mt-1" href="/announcements">All announcements</a>
             </div>
         </div>
     </div>

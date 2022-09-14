@@ -1,10 +1,11 @@
 <main xmlns:sec="http://www.w3.org/1999/xhtml">
+    <div class="container text-center offer-text mt-4">Offer of the week</div>
     <div th:replace="products-template"/>
 
     <div class="row justify-content-center m-0" sec:authorize="hasRole('ROLE_ADMIN')">
         <div class="col-md-4">
             <div class="d-grid gap-2">
-                <a type="button" class="btn btn-primary mt-3" href="/week-offer/selectProducts">Crete offer of the week</a>
+                <a type="button" class="btn btn-warning fw-bold my-3" href="/week-offer/selectProducts">Crete offer of the week</a>
             </div>
         </div>
     </div>
