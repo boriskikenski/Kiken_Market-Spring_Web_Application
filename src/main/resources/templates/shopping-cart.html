@@ -20,8 +20,8 @@
                     <tr th:each="product : ${products}">
                         <td th:text="${product.getProduct().name}"></td>
                         <td th:text="${product.quantity}"></td>
-                        <td th:text="${product.boughtOnPrice}"></td>
-                        <td th:text="${product.totalForProduct}"></td>
+                        <td th:text="${product.boughtOnPrice} + ' ' + '€'"></td>
+                        <td th:text="${product.totalForProduct} + ' ' + '€  '"></td>
                         <td></td>
                         <td>
                             <form th:action="@{'/shopping-cart/added/{id}' (id=${product.getProduct().productID})}" method="post">
@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td/><td/><td/><td/>
-                        <td th:text="${total}"></td>
+                        <td th:text="${total} + ' ' + '€'"></td>
                     </tr>
 
                     </tbody>

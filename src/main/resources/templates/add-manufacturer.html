@@ -15,7 +15,7 @@
             <div class="col-md-6">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name"
-                           th:value="(${manufacturer} != null ? ${manufacturer.getManufacturerName()} : '')">
+                           th:value="(${manufacturer} != null ? ${manufacturer.getManufacturerName()} : '')" required>
                     <label for="floatingName">Name</label>
                 </div>
             </div>

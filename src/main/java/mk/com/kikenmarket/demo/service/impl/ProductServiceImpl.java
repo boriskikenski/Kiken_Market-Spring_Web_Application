@@ -2,12 +2,15 @@ package mk.com.kikenmarket.demo.service.impl;
 
 import mk.com.kikenmarket.demo.model.Category;
 import mk.com.kikenmarket.demo.model.Manufacturer;
+import mk.com.kikenmarket.demo.model.Order;
 import mk.com.kikenmarket.demo.model.Product;
 import mk.com.kikenmarket.demo.model.exceptions.CategoryNotFoundException;
 import mk.com.kikenmarket.demo.model.exceptions.ManufacturerNotFoundException;
+import mk.com.kikenmarket.demo.model.exceptions.OrderNotFoundException;
 import mk.com.kikenmarket.demo.model.exceptions.ProductNotFoundException;
 import mk.com.kikenmarket.demo.repository.CategoryRepository;
 import mk.com.kikenmarket.demo.repository.ManufacturerRepository;
+import mk.com.kikenmarket.demo.repository.OrderRepository;
 import mk.com.kikenmarket.demo.repository.ProductRepository;
 import mk.com.kikenmarket.demo.service.ProductService;
 import mk.com.kikenmarket.demo.service.ShoppingCartService;
@@ -24,12 +27,16 @@ public class ProductServiceImpl implements ProductService {
     private final ShoppingCartService shoppingCartService;
     private final ManufacturerRepository manufacturerRepository;
     private final CategoryRepository categoryRepository;
+    private final OrderRepository orderRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, ShoppingCartService shoppingCartService, ManufacturerRepository manufacturerRepository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ShoppingCartService shoppingCartService,
+                              ManufacturerRepository manufacturerRepository, CategoryRepository categoryRepository,
+                              OrderRepository orderRepository) {
         this.productRepository = productRepository;
         this.shoppingCartService = shoppingCartService;
         this.manufacturerRepository = manufacturerRepository;
         this.categoryRepository = categoryRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -53,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
             this.productRepository.save(product);
             this.shoppingCartService.updateProductShoppingCart();
         }
+        this.shoppingCartService.updateProductShoppingCart();
     }
 
     @Override
@@ -131,5 +139,22 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return foundProducts;
+    }
+
+    @Override
+    public void updateQuantity(Long orderID) {
+        Order order = this.orderRepository.findByOrderID(orderID)
+                .orElseThrow(()->new OrderNotFoundException(orderID));
+        order.getCart().getProductShoppingCartList()
+                .stream()
+                .forEach(productShoppingCart -> {
+                    Long productID = productShoppingCart.getProduct().getProductID();
+                    Product product = this.productRepository
+                            .findByProductID(productID)
+                            .orElseThrow(() -> new ProductNotFoundException(productID));
+                    product.setQuantity(product.getQuantity() - (int)productShoppingCart.getQuantity());
+                    this.productRepository.save(product);
+                });
+
     }
 }

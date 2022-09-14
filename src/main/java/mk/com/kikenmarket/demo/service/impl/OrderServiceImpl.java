@@ -20,9 +20,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,8 +56,15 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCart shoppingCart = this.shoppingCartRepository.findShoppingCartByCostumerAndShoppingCartStatus
                 (costumer, ShoppingCartStatus.ACTIVE);
 
+        double salePercentage = 0.0;
+        if (coupon != null){
+            salePercentage = coupon.getSalePercentage();
+            coupon.setStatus(CouponStatus.USED);
+            this.couponRepository.save(coupon);
+        }
+
         if (checkForReorder(costumer) == null){
-            double orderValue = shoppingCart.getCurrentValue() - (shoppingCart.getCurrentValue() * (coupon.getSalePercentage()/100));
+            double orderValue = shoppingCart.getCurrentValue() - (shoppingCart.getCurrentValue() * (salePercentage/100));
             this.orderRepository.save(new Order(costumer, dateOfOrder, email, street, streetNumber,
                     city, shoppingCart, orderValue));
             Order order = this.orderRepository.findByCart(shoppingCart);
@@ -74,20 +79,18 @@ public class OrderServiceImpl implements OrderService {
             }
         } else {
             Order reorder = this.orderRepository.findByOrderID(checkForReorder(costumer)).get();
-            double orderValue = shoppingCart.getCurrentValue() - (shoppingCart.getCurrentValue() * (coupon.getSalePercentage()/100));
+            double orderValue = shoppingCart.getCurrentValue() - (shoppingCart.getCurrentValue() * (salePercentage/100));
             orderID = reorder.getOrderID();
             reorder.setNumberOfReorders(reorder.getNumberOfReorders()+1);
             reorder.setMoneyValue(orderValue);
             reorder.setDateOfOrder(dateOfOrder);
+            reorder.setEmail(email);
             this.orderRepository.save(reorder);
         }
 
         shoppingCart.setShoppingCartStatus(ShoppingCartStatus.ORDERED);
         this.shoppingCartRepository.save(shoppingCart);
         this.shoppingCartRepository.save(new ShoppingCart(costumer, ShoppingCartStatus.ACTIVE));
-
-        coupon.setStatus(CouponStatus.USED);
-        this.couponRepository.save(coupon);
 
         return orderID;
     }

@@ -25,4 +25,6 @@ public interface ProductService {
     List<Product> listAllProductsFiltered(Long manufacturerID, Long categoryID);
 
     List<Product> search(String search);
+
+    void updateQuantity(Long orderID);
 }

@@ -14,7 +14,7 @@
             <div class="col-md-6">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="floatingTitle"name="title" placeholder="Title"
-                           th:value="(${announcement} != null ? ${announcement.title} : '')">
+                           th:value="(${announcement} != null ? ${announcement.title} : '')" required>
                     <label for="floatingTitle">Title</label>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                 <div class="form-floating">
                     <textarea class="form-control" name="information" placeholder="Information"
                               id="floatingInformation" style="height: 15vh"
-                              th:value="(${announcement} != null ? ${announcement.getInformation()} : '')"></textarea>
+                              th:value="(${announcement} != null ? ${announcement.getInformation()} : '')" required></textarea>
                     <label for="floatingInformation">Information</label>
                 </div>
             </div>

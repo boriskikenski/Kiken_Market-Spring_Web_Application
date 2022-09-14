@@ -4,6 +4,7 @@ import mk.com.kikenmarket.demo.model.Category;
 import mk.com.kikenmarket.demo.model.Country;
 import mk.com.kikenmarket.demo.model.Manufacturer;
 import mk.com.kikenmarket.demo.service.CategoryService;
+import mk.com.kikenmarket.demo.service.CountryService;
 import mk.com.kikenmarket.demo.service.ManufacturerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +19,11 @@ import java.util.List;
 public class ManufacturerController {
     private final ManufacturerService manufacturerService;
     private final CategoryService categoryService;
-
-    public ManufacturerController(ManufacturerService manufacturerService, CategoryService categoryService) {
+    private final CountryService countryService;
+    public ManufacturerController(ManufacturerService manufacturerService, CategoryService categoryService, CountryService countryService) {
         this.manufacturerService = manufacturerService;
         this.categoryService = categoryService;
+        this.countryService = countryService;
     }
 
     @GetMapping
@@ -36,11 +38,8 @@ public class ManufacturerController {
 
     @GetMapping("/add-manufacturer")
     private String getAddManufacturerPage(Model model) {
-        String url = "https://restcountries.com/v3.1/all";
-        RestTemplate restTemplate = new RestTemplate();
-
-        Country[] countries = restTemplate.getForObject(url, Country[].class);
         List<Category> categories = this.categoryService.listAllCategories();
+        List<Country> countries = this.countryService.getCountries();
 
         model.addAttribute("categories", categories);
         model.addAttribute("countries", countries);
