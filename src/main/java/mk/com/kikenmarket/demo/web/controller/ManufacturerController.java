@@ -29,8 +29,9 @@ public class ManufacturerController {
     @GetMapping
     private String getManufacturersPage(Model model){
         List<Category> categories = this.categoryService.listAllCategories();
-        model.addAttribute("categories", categories);
         List<Manufacturer> manufacturers = manufacturerService.listAllManufacturers();
+
+        model.addAttribute("categories", categories);
         model.addAttribute("manufacturers", manufacturers);
         model.addAttribute("bodyContent", "manufacturers");
         return "template";
@@ -50,12 +51,8 @@ public class ManufacturerController {
     @GetMapping("/edit-page/{id}")
     private String getManufacturerEditPage(@PathVariable Long id,
                                            Model model){
-        String url = "https://restcountries.com/v3.1/all";
-        RestTemplate restTemplate = new RestTemplate();
-
-        Country[] countries = restTemplate.getForObject(url, Country[].class);
+        List<Country> countries = this.countryService.getCountries();
         List<Category> categories = this.categoryService.listAllCategories();
-
         Manufacturer manufacturer = this.manufacturerService.findByID(id);
 
         model.addAttribute("manufacturer", manufacturer);
